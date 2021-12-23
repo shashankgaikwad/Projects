@@ -1,0 +1,1842 @@
+#include <iostream>
+using namespace std;
+template <typename T>
+struct node
+{
+    T data;
+    struct node *next;
+};
+//////////////////////////////////////////////////////////////////////
+template <typename T>
+class SinglyLL
+{
+private:
+    node<T> *first;
+    int size;
+
+public:
+    SinglyLL();
+    void InsertFirst(T);
+    void InsertLast(T);
+    void InsertAtPos(T, int);
+    void DeleteFirst();
+    void DeleteLast();
+    void DeleteAtPos(int);
+    void Display();
+    int Count();
+};
+////////////////////////////////////////////////////////////////////
+template <typename T>
+SinglyLL<T>::SinglyLL()
+{
+    first = NULL;
+    size = 0;
+}
+/////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::InsertFirst(T no)
+{
+    node<T> *newn = new node<T>; // newn = (struct node*)malloc(sizeof(NODE))
+
+    newn->data = no;
+    newn->next = NULL;
+
+    if (first == NULL)
+    {
+        first = newn;
+    }
+    else
+    {
+        newn->next = first;
+        first = newn;
+    }
+    size++;
+}
+////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::InsertLast(T no)
+{
+    node<T> *newn = new node<T>; // newn = (struct node*)malloc(sizeof(NODE))
+
+    newn->data = no;
+    newn->next = NULL;
+
+    if (first == NULL)
+    {
+        first = newn;
+    }
+    else
+    {
+        node<T> *temp = first;
+
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newn;
+    }
+    size++;
+}
+/////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::InsertAtPos(T no, int iPos)
+{
+    int i = 0;
+    int size = Count();
+    if (iPos == 1)
+    {
+        InsertFirst(no);
+    }
+    if (iPos == size + 1)
+    {
+        InsertLast(no);
+    }
+    else
+    {
+        node<T> *newn = NULL;
+        node<T> *temp = first;
+        newn = (node<T> *)malloc(sizeof(node<T>));
+        newn->data = no;
+        newn->next = NULL;
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+        newn->next = temp->next;
+        temp->next = newn;
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::DeleteFirst()
+{
+    node<T> *temp = first;
+
+    if (first != NULL)
+    {
+        first = first->next;
+        delete temp;
+
+        size--;
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::DeleteLast()
+{
+    node<T> *temp = first;
+
+    if (first == NULL)
+    {
+        return;
+    }
+    else if (first->next == NULL)
+    {
+        delete first;
+        first = NULL;
+        size--;
+    }
+    else
+    {
+        while (temp->next->next != NULL)
+        {
+            temp = temp->next;
+        }
+
+        delete temp->next;
+        temp->next = NULL;
+        size--;
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::DeleteAtPos(int iPos)
+{
+    int size = 0;
+    node<T> *temp = first;
+    int i = 0;
+    size = Count();
+    node<T> *targated = NULL;
+
+    if ((iPos < 1) || (iPos > size)) // Filter for invalid position
+    {
+        printf("Invalid position\n");
+        return;
+    }
+
+    if (iPos == 1) // Fisrt position
+    {
+        DeleteFirst();
+    }
+    else if (iPos == size) // Last position
+    {
+        DeleteLast();
+    }
+    else // inbetween posotion
+    {
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+        targated = temp->next;
+
+        temp->next = targated->next;
+        free(targated);
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+void SinglyLL<T>::Display()
+{
+    node<T> *temp = first;
+    while (temp != NULL)
+    {
+        cout << "|" << temp->data << "|->"
+             << "\t";
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+////////////////////////////////////////////////////////////////////////////////
+template <typename T>
+int SinglyLL<T>::Count()
+{
+    return size;
+}
+////////////////////////////////////////////////////////////////////////////////
+//**********************************************************************************
+//*********************************************************************************
+template <typename T>
+struct node2
+{
+    T data;
+    struct node2 *next;
+    struct node2 *prev;
+};
+//////////////////////////////////////////////////////////////
+template <typename T>
+class DoublyLL
+{
+private:
+    node2<T> *first;
+    node2<T> *prev;
+    int size;
+
+public:
+    DoublyLL();
+    void InsertFirst(int);
+    void InsertLast(int);
+    void InsertAtPos(int, int);
+    void DeleteFirst();
+    void DeleteLast();
+    void DeleteAtPos(int);
+    void Display();
+    int Count();
+};
+///////////////////////////////////////////////////////////////
+template <typename T>
+DoublyLL<T>::DoublyLL()
+{
+    first = NULL;
+    size = 0;
+}
+//////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::InsertFirst(int no)
+{
+    node2<T> *newn = NULL;
+    newn = (node2<T> *)malloc(sizeof(node2<T>));
+
+    newn->data = no;
+    newn->next = NULL;
+    newn->prev = NULL;
+    if (first == NULL)
+    {
+        first = newn;
+        size++;
+    }
+    else
+    {
+        newn->next = first;
+        (first)->prev = newn;
+        first = newn;
+        size++;
+    }
+}
+///////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::InsertLast(int no)
+{
+    node2<T> *newn = NULL;
+    node2<T> *temp = first;
+    newn = (node2<T> *)malloc(sizeof(node2<T>));
+    newn->data = no;
+    newn->next = NULL;
+    newn->prev = NULL;
+    if (first == NULL)
+    {
+        first = newn;
+        size++;
+    }
+    else
+    {
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newn;
+        newn->prev = temp;
+        size++;
+    }
+}
+///////////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::InsertAtPos(int no, int iPos)
+{
+    int size = 0, i = 0;
+    size = Count();
+    node2<T> *temp = first;
+    if ((iPos < 1) || (iPos > size + 1))
+    {
+        printf("Invalid position\n");
+        return;
+    }
+    if (iPos == 1)
+    {
+        InsertFirst(no);
+    }
+    if (iPos == size + 1)
+    {
+        InsertLast(no);
+    }
+    else
+    {
+        node2<T> *newn = NULL;
+        node2<T> *temp = first;
+        newn = (node2<T> *)malloc(sizeof(node2<T>));
+        newn->data = no;
+        newn->next = NULL;
+        newn->prev = NULL;
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+        newn->next = temp->next;
+        newn->next->prev = newn;
+        temp->next = newn;
+        newn->prev = temp;
+        size++;
+    }
+}
+////////////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::DeleteFirst()
+{
+    // struct node* temp = first;
+
+    // if (first != NULL)
+    // {
+    //     first = first->next;
+    //     delete temp;
+
+    //     size--;
+    // }
+    if (first == NULL)
+    {
+        return;
+    }
+    else if ((first)->next == NULL)
+    {
+        free(first);
+        first = NULL;
+        size--;
+    }
+    else
+    {
+        first = (first)->next;
+        free((first)->prev);
+        (first)->prev = NULL;
+        size--;
+    }
+}
+///////////////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::DeleteLast()
+{
+    if (first == NULL)
+    {
+        return;
+    }
+    else if ((first)->next == NULL)
+    {
+        free(first);
+        first = NULL;
+        size--;
+    }
+    else
+    {
+        node2<T> *temp = first;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->prev->next = NULL;
+        free(temp);
+        size--;
+    }
+}
+/////////////////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::DeleteAtPos(int iPos)
+{
+    int size = Count();
+    int i = 0;
+    node2<T> *temp = first;
+
+    if ((iPos < 1) || (iPos > size))
+    {
+        printf("Invalid position\n");
+        return;
+    }
+
+    if (iPos == 1)
+    {
+        DeleteFirst();
+    }
+    else if (iPos == size)
+    {
+        DeleteLast();
+    }
+    else
+    {
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+
+        temp->next = temp->next->next;
+        free(temp->next->prev);
+        temp->next->prev = temp;
+        size--;
+    }
+}
+/////////////////////////////////////////////////////////////////////////
+template <typename T>
+void DoublyLL<T>::Display()
+{
+    node2<T> *temp = first;
+    while (temp != NULL)
+    {
+        cout << "|" << temp->data << "|->"
+             << "\t";
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+/////////////////////////////////////////////////////////////////////////
+template <typename T>
+int DoublyLL<T>::Count()
+{
+    return size;
+}
+////////////////////////////////////////////////////////////////////////
+//**********************************************************************
+template <typename T>
+struct node3
+{
+    T data;
+    struct node3 *next;
+    struct node3 *prev;
+};
+/////////////////////////////////////////////////////////////
+template <typename T>
+class SinglyCL
+{
+private:
+    node3<T> *first;
+    node3<T> *Tail;
+    int size;
+
+public:
+    SinglyCL();
+    void InsertFirst(int);
+    void InsertLast(int);
+    void InsertAtPos(int, int);
+    void DeleteFirst();
+    void DeleteLast();
+    void DeleteAtPos(int);
+    void Display();
+    int Count();
+};
+/////////////////////////////////////////////////////////////
+template <typename T>
+SinglyCL<T>::SinglyCL()
+{
+    first = NULL;
+    Tail = NULL;
+    size = 0;
+}
+/////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::InsertFirst(int no)
+{
+    node3<T> *newn = NULL;
+    newn = (node3<T> *)malloc(sizeof(node3<T>));
+
+    newn->data = no;
+    newn->next = NULL;
+
+    if ((first == NULL) && (Tail == NULL)) // LL is empty
+    {
+        first = newn;
+        Tail = newn;
+        size++;
+    }
+    else
+    {
+        newn->next = first;
+        first = newn;
+        size++;
+    }
+    (Tail)->next = first; // To mainatain circular nature
+}
+///////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::InsertLast(int no)
+{
+    node3<T> *newn = NULL;
+    newn = (node3<T> *)malloc(sizeof(node3<T>));
+
+    newn->data = no;
+    newn->next = NULL;
+
+    if ((first == NULL) && (Tail == NULL)) // LL is empty
+    {
+        first = newn;
+        Tail = newn;
+        size++;
+    }
+    else
+    {
+        (Tail)->next = newn;
+        Tail = newn;
+        size++;
+    }
+    (Tail)->next = first; // To mainatain circular nature
+}
+////////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::InsertAtPos(int no, int iPos)
+{
+    int i = 0;
+    int size = 0;
+    size = Count();
+    if ((iPos < 1) || (iPos > size + 1))
+    {
+        printf("Invalid position\n");
+        return;
+    }
+    if (iPos == 1)
+    {
+        InsertFirst(no);
+    }
+    if (iPos == size + 1)
+    {
+        InsertLast(no);
+    }
+    else
+    {
+        node3<T> *newn = NULL;
+        node3<T> *temp = first;
+        newn = (node3<T> *)malloc(sizeof(node3<T>));
+        newn->data = no;
+        newn->next = NULL;
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+        newn->next = temp->next;
+        temp->next = newn;
+        (Tail)->next = first; // To mainatain circular nature
+        size++;
+    }
+}
+////////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::DeleteFirst()
+{
+    if ((first == NULL) && (Tail == NULL))
+    {
+        return;
+    }
+    else if (first == Tail)
+    {
+        free(first);
+        first = NULL;
+        Tail = NULL;
+        size--;
+    }
+    else
+    {
+        first = (first)->next;
+        free((Tail)->next);
+        (Tail)->next = first;
+        size--;
+    }
+}
+////////////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::DeleteLast()
+{
+    node3<T> *temp = first;
+
+    if ((first == NULL) && (Tail == NULL))
+    {
+        return;
+    }
+    else if (first == Tail)
+    {
+        free(first);
+        first = NULL;
+        Tail = NULL;
+        size--;
+    }
+    else
+    {
+        while (temp->next != Tail)
+        {
+            temp = temp->next;
+        }
+        free(Tail);
+        Tail = temp;
+        (Tail)->next = first;
+        size--;
+    }
+}
+/////////////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::DeleteAtPos(int iPos)
+{
+    int i = 0;
+    node3<T> *temp = first;
+    int size = 0;
+    size = Count();
+    if ((first == NULL) && (Tail == NULL))
+    {
+        return;
+    }
+    if (iPos == 1)
+    {
+        DeleteFirst();
+    }
+    else if (iPos == size)
+    {
+        DeleteLast();
+    }
+    else
+    {
+        for (i = 1; i < iPos - 1; i++)
+        {
+            temp = temp->next;
+        }
+        node3<T> *targated = NULL;
+        targated = temp->next;
+        temp->next = targated->next;
+        free(targated);
+        (Tail)->next = first; // To mainatain circular nature
+        size--;
+    }
+}
+//////////////////////////////////////////////////////////////////////
+template <typename T>
+
+void SinglyCL<T>::Display()
+{
+    node3<T> *temp = first;
+    if ((temp == NULL) && (Tail == NULL))
+    {
+        return;
+    }
+    do
+    {
+        cout << "|" << temp->data << "|->"
+             << "\t";
+        temp = temp->next;
+    } while (temp != Tail->next);
+    printf("\n");
+}
+///////////////////////////////////////////////////////////////////////
+template <typename T>
+
+int SinglyCL<T>::Count()
+{
+    return size;
+}
+////////////////////////////////////////////////////////////////////////////
+//*******************************************************************************
+template <typename T>
+struct node5
+{
+    T data;
+    struct node5 *next;
+};
+template <typename T>
+class Stack // Singly Linear Linked List
+{
+private:
+    node5<T> *first;
+    int size;
+
+public:
+    Stack();
+    void push(T no); // InsertFirst()
+    int pop();       // DeleteFirst()
+    void Display();
+    int Count();
+};
+template <typename T>
+Stack<T>::Stack()
+{
+    first = NULL;
+    size = 0;
+}
+template <typename T>
+void Stack<T>::push(T no) // InsertFirst()
+{
+    node5<T> *newn = new node5<T>;
+    newn->data = no;
+    newn->next = NULL;
+
+    if (first == NULL)
+    {
+        first = newn;
+    }
+    else
+    {
+        newn->next = first;
+        first = newn;
+    }
+    size++;
+}
+template <typename T>
+int Stack<T>::pop() // DeleteFirst()
+{
+    int no = 0;
+    node5<T> *temp = first;
+
+    if (size == 0)
+    {
+        cout << "Stack is empty\n";
+        return -1;
+    }
+
+    if (size == 1)
+    {
+        no = first->data;
+        delete first;
+        first = NULL;
+    }
+    else
+    {
+        no = first->data;
+        first = first->next;
+        delete temp;
+    }
+
+    size--;
+    return no;
+}
+template <typename T>
+void Stack<T>::Display()
+{
+    node5<T> *temp = first;
+    if (first == NULL)
+    {
+        cout << "STACK IS EMPTY\n";
+    }
+
+    while (temp != NULL)
+    {
+        cout << "|" << temp->data << "|"
+             << "\n";
+        temp = temp->next;
+    }
+}
+template <typename T>
+int Stack<T>::Count()
+{
+    return size;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*****************************************************************************************************************
+template <typename T>
+
+struct node6
+{
+    T data;
+    struct node6 *next;
+};
+template <typename T>
+
+class Queue // Singly Linear Linked List
+{
+private:
+    node6<T> *first;
+    int size;
+
+public:
+    Queue();
+    void Enqueue(T no);
+    int Dequeue();
+    void Display();
+    int Count();
+};
+template <typename T>
+
+Queue<T>::Queue()
+{
+    first = NULL;
+    size = 0;
+}
+template <typename T>
+
+void Queue<T>::Enqueue(T no) // InsertLast()
+{
+    node6<T> *newn = new node6<T>;
+    newn->data = no;
+    newn->next = NULL;
+
+    if (size == 0) // if(first == NULL)
+    {
+        first = newn;
+    }
+    else
+    {
+        node6<T> *temp = first;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newn;
+    }
+    size++;
+}
+template <typename T>
+
+int Queue<T>::Dequeue() // DeleteFirst()
+{
+    int no = 0;
+    node6<T> *temp = first;
+
+    if (size == 0)
+    {
+        cout << "Queue is empty\n";
+        return -1;
+    }
+
+    if (size == 1)
+    {
+        no = first->data;
+        delete first;
+        first = NULL;
+    }
+    else
+    {
+        no = first->data;
+        first = first->next;
+        delete temp;
+    }
+
+    size--;
+    return no;
+    // Logic
+}
+template <typename T>
+
+void Queue<T>::Display()
+{
+    node6<T> *temp = first;
+
+    for (int i = 1; i <= size; i++, temp = temp->next)
+    {
+        cout << "|" << temp->data << "|-> ";
+    }
+    cout << "\n";
+}
+template <typename T>
+
+int Queue<T>::Count()
+{
+    return size;
+}
+
+int main()
+{
+    int iValue1 = 0, iValue2 = 0;
+    cout << "---------------------------------------------\n";
+
+    cout << "1:CREATE LINEAR LINKED LIST" << endl;
+    cout << "2:CREATE DOUBLY LINKED LIST" << endl;
+    cout << "3:CREATE SINGLY CIRCULAR LINKED LIST" << endl;
+    cout << "4:CREATE STACK" << endl;
+    cout << "5:CREATE QUEUE" << endl;
+    cout << "---------------------------------------------\n";
+
+    cout << "ENTER YOUR CHOICE" << endl;
+    cin >> iValue1;
+    switch (iValue1)
+    {
+    case 1:
+        cout << "1:CREATE LINKED LIST FOR INTEGER\n";
+        cout << "2:CREATE LINKED LIST FOR CHARACTER\n";
+        cout << "3:CREATE LINKED LIST FOR FLOAT\n";
+        cout << "ENTER YOUR CHOICE:\n";
+        cin >> iValue2;
+        if (iValue2 == 1)
+        {
+            SinglyLL<int> obj;
+
+            int iChoice = 1, value = 0, pos = 0, iRet = 0;
+            while (iChoice != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "0:Terminate the application\n";
+
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoice;
+                switch (iChoice)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    obj.DeleteFirst();
+                    break;
+
+                case 5:
+                    obj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    obj.Display();
+                    break;
+                case 8:
+                    iRet = obj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING INTEGER LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 2)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            char value = 0;
+            SinglyLL<char> Cobj;
+
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "9:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display();
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING CHARACTER LINKED LIST ....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 3)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            float value = 0.0;
+            SinglyLL<float> Cobj;
+
+            while (iChoiceC != 0.0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "9:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display();
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING FLOAT LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+    case 2:
+        cout << "1:CREATE DOUBLY LINKED LIST FOR INTEGER\n";
+        cout << "2:CREATE DOUBLY LINKED LIST FOR CHARACTER\n";
+        cout << "3:CREATE DOUBLY LINKED LIST FOR FLOAT\n";
+        cout << "ENTER YOUR CHOICE:\n";
+        cin >> iValue2;
+        if (iValue2 == 1)
+        {
+            int iChoice = 1, value = 0, pos = 0, iRet = 0;
+            DoublyLL<int> obj;
+
+            while (iChoice != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "0:Terminate the application\n";
+
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoice;
+                switch (iChoice)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    obj.DeleteFirst();
+                    break;
+
+                case 5:
+                    obj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    obj.Display();
+                    break;
+                case 8:
+                    iRet = obj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING INTEGER LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 2)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            char value = 0;
+            DoublyLL<char> Cobj;
+
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "9:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display();
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING CHARACTER LINKED LIST ....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 3)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            float value = 0.0;
+            DoublyLL<float> Cobj;
+
+            while (iChoiceC != 0.0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "0:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display(); ///NOT PRINTING VALUE AFTER POINT
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING FLOAT LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+
+    case 3:
+
+        cout << "1:CREATE SINGLY CIRCULAR LINKED LIST FOR INTEGER\n";
+        cout << "2:CREATE SINGLY CIRCULAR LINKED LIST FOR CHARACTER\n";
+        cout << "3:CREATE SINGLY CIRCULAR LINKED LIST FOR FLOAT\n";
+        cout << "ENTER YOUR CHOICE:\n";
+        cin >> iValue2;
+        if (iValue2 == 1)
+        {
+            int iChoice = 1, value = 0, pos = 0, iRet = 0;
+            SinglyCL<int> obj;
+
+            while (iChoice != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "0:Terminate the application\n";
+
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoice;
+                switch (iChoice)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    obj.DeleteFirst();
+                    break;
+
+                case 5:
+                    obj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    obj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    obj.Display();
+                    break;
+                case 8:
+                    iRet = obj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING INTEGER LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 2)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            char value = 0;
+            SinglyCL<char> Cobj;
+
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "9:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display();
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING CHARACTER LINKED LIST ....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+        else if (iValue2 == 3)
+        {
+            int iChoiceC = 1, pos = 0, iRet = 0;
+            float value = 0.0;
+            SinglyCL<float> Cobj;
+
+            while (iChoiceC != 0.0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO INSERT AT FIRST POSITION\n";
+                cout << "2:ENTER ELEMENT TO INSERT AT LAST POSITION\n";
+                cout << "3:ENTER THE ELEMENT AT DESIRED POSITION \n";
+                cout << "4:DELETE THE FIRST NODE\n";
+                cout << "5:DELETE THE LAST NODE\n";
+                cout << "6:DELETE THE FROM DESIRED POSITION NODE\n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM LINKED LIST\n";
+                cout << "8:NUMBER OF NODES PRESENT IN LINKED LIST ARE\n";
+                cout << "0:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertFirst(value);
+                    break;
+                case 2:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    Cobj.InsertLast(value);
+                    break;
+                case 3:
+
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.InsertAtPos(value, pos);
+                    break;
+
+                case 4:
+                    Cobj.DeleteFirst();
+                    break;
+
+                case 5:
+                    Cobj.DeleteLast();
+                    break;
+
+                case 6:
+                    printf("Enter the position\n");
+                    scanf("%d", &pos);
+                    Cobj.DeleteAtPos(pos);
+                    break;
+
+                case 7:
+                    Cobj.Display(); ///NOT PRINTING VALUE AFTER POINT
+                    break;
+                case 8:
+                    iRet = Cobj.Count();
+                    printf("Number of elements are : %d\n", iRet);
+                    break;
+                case 0:
+                    printf("THANKES FOR USING FLOAT LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+
+                default:
+                    printf("PLEASE ENTER PROPER CHOICE\n");
+                    break;
+                }
+            }
+        }
+    case 4:
+        int iNO1;
+        cout << "------------------------------------------------\n";
+        cout << "1:CREATE STACK FOR INTEGER" << endl;
+        cout << "2:CREATE STACK FOR CHARACTER" << endl;
+        cout << "3:CREATE STACK FOR DOUBLY" << endl;
+        cout << "------------------------------------------------\n";
+        cout << "ENTER YOUR CHOICE:\n";
+        cin >> iNO1;
+
+        if (iNO1 == 1)
+        {
+            Stack<int> obj;
+
+            int iChoiceC = 1, iRet = 0;
+            int value = 0.0;
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO PERFORM ENQUEUE OPERATION \n";
+                cout << "4:PERFROM DEQUEUE OPERATION \n";
+                cout << "7:TO DISPLAY THE ELEMENTS FROM STACK LIST\n";
+                cout << "8:NUMBER OF ELEMENTS PRESENT IN STACK ARE\n";
+                cout << "0:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.push(value);
+                    break;
+                case 2:
+                    obj.pop();
+                    break;
+                case 3:
+                    obj.Display();
+                    break;
+                case 4:
+                    obj.Count();
+                }
+            }
+        }
+        else if (iNO1 == 2)
+        {
+            Stack<char> obj;
+
+            int iChoiceC = 1, iRet = 0;
+            char value = 0.0;
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:PERFORM ENQUEUE OPERATION \n";
+                cout << "2:PERFROM DEQUEUE OPERATION \n";
+                cout << "3:TO DISPLAY THE ELEMENTS FROM STACK LIST\n";
+                cout << "4:NUMBER OF ELEMENTS PRESENT IN STACK ARE\n";
+                cout << "0:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.push(value);
+                    break;
+                case 2:
+                    obj.pop();
+                    break;
+                case 3:
+                    obj.Display();
+                    break;
+                case 4:
+                    obj.Count();
+                case 0:
+                    printf("THANKES FOR USING INTEGER LINKED LIST....\n");
+                    printf("YOU WANN SWITCH...?\n");
+                    break;
+                }
+            }
+        }
+        else if (iNO1 == 3)
+        {
+            Stack<float> obj;
+
+            int iChoiceC = 1, iRet = 0;
+            float value = 0.0;
+            while (iChoiceC != 0)
+            {
+                cout << "---------------------------------------------\n";
+                cout << "1:ENTER ELEMENT TO PERFORM ENQUEUE OPERATION \n";
+                cout << "2:PERFROM DEQUEUE OPERATION \n";
+                cout << "3:TO DISPLAY THE ELEMENTS FROM STACK LIST\n";
+                cout << "4:NUMBER OF ELEMENTS PRESENT IN STACK ARE\n";
+                cout << "0:Terminate the application\n";
+                cout << "---------------------------------------------\n";
+
+                cout << "enter your choice" << endl;
+                cin >> iChoiceC;
+                switch (iChoiceC)
+                {
+                case 1:
+                    printf("Enter the data to insert\n");
+                    cin >> value;
+                    obj.push(value);
+                    break;
+                case 2:
+                    obj.pop();
+                    break;
+                case 3:
+                    obj.Display();
+                    break;
+                case 4:
+                    obj.Count();
+                }
+            }
+        }
+
+    case 5:
+        int iValue = 1;
+        while (iValue != 0)
+        {
+            int iValue1 = 0;
+            cout << "------------------------------------------------\n";
+            cout << "1:CREATE QUEUE FOR INTEGER" << endl;
+            cout << "2:CREATE QUEUE FOR CHARACTER" << endl;
+            cout << "3:CREATE QUEUE FOR DOUBLY" << endl;
+            cout << "------------------------------------------------\n";
+            cout << "ENTER YOUR CHOICE:\n";
+            cin >> iValue1;
+
+            if (iValue1 == 1)
+            {
+                Queue<int> obj;
+
+                int iChoiceC = 1, iRet = 0;
+                int value = 0.0;
+                while (iChoiceC != 0)
+                {
+                    cout << "---------------------------------------------\n";
+                    cout << "1:ENTER ELEMENT TO PERFORM ENQUEUE OPERATION \n";
+                    cout << "4:PERFROM DEQUEUE OPERATION \n";
+                    cout << "7:TO DISPLAY THE ELEMENTS FROM STACK LIST\n";
+                    cout << "8:NUMBER OF ELEMENTS PRESENT IN STACK ARE\n";
+                    cout << "0:TERMINATE THE APPLICATION \n";
+                    cout << "---------------------------------------------\n";
+
+                    cout << "ENTER YOUR CHOICE.." << endl;
+                    cin >> iChoiceC;
+                    switch (iChoiceC)
+                    {
+                    case 1:
+                        printf("ENTER DATA TO INSERT IN QUEUE:\n");
+                        cin >> value;
+                        obj.Enqueue(value);
+                        break;
+                    case 2:
+                        obj.Dequeue();
+                        break;
+                    case 3:
+                        obj.Display();
+                        break;
+                    case 4:
+                        obj.Count();
+                    }
+                }
+            }
+            else if (iValue1 == 2)
+            {
+                Queue<char> obj;
+
+                int iChoiceC = 1, iRet = 0;
+                char value = 0.0;
+                while (iChoiceC != 0)
+                {
+                    cout << "---------------------------------------------\n";
+                    cout << "1:PERFORM ENQUEUE OPERATION \n";
+                    cout << "2:PERFROM DEQUEUE OPERATION \n";
+                    cout << "3:TO DISPLAY THE ELEMENTS FROM QUEUE LIST\n";
+                    cout << "4:NUMBER OF ELEMENTS PRESENT IN QUEUE ARE\n";
+                    cout << "0:TERMINATE THE APPLICATION \n";
+                    cout << "---------------------------------------------\n";
+
+                    cout << "ENTER YOUR CHOICE.." << endl;
+                    cin >> iChoiceC;
+                    switch (iChoiceC)
+                    {
+                    case 1:
+                        printf("ENTER DATA TO INSERT IN QUEUE:\n");
+                        cin >> value;
+                        obj.Enqueue(value);
+                        break;
+                    case 2:
+                        obj.Dequeue();
+                        break;
+                    case 3:
+                        obj.Display();
+                        break;
+                    case 4:
+                        obj.Count();
+                    case 0:
+                        printf("THANKES FOR USING INTEGER LINKED LIST....\n");
+                        printf("YOU WANN SWITCH...?\n");
+                        break;
+                    }
+                }
+            }
+            else if (iValue1 == 3)
+            {
+                Queue<float> obj;
+
+                int iChoiceC = 1, iRet = 0;
+                float value = 0.0;
+                while (iChoiceC != 0)
+                {
+                    cout << "---------------------------------------------\n";
+                    cout << "1:ENTER ELEMENT TO PERFORM ENQUEUE OPERATION \n";
+                    cout << "4:PERFROM DEQUEUE OPERATION \n";
+                    cout << "7:TO DISPLAY THE ELEMENTS FROM STACK LIST\n";
+                    cout << "8:NUMBER OF ELEMENTS PRESENT IN STACK ARE\n";
+                    cout << "0:TERMINATE THE APPLICATION \n";
+                    cout << "---------------------------------------------\n";
+
+                    cout << "ENTER YOUR CHOICE.." << endl;
+                    cin >> iChoiceC;
+                    switch (iChoiceC)
+                    {
+                    case 1:
+                        printf("ENTER DATA TO INSERT IN QUEUE:\n");
+                        cin >> value;
+                        obj.Enqueue(value);
+                        break;
+                    case 2:
+                        obj.Dequeue();
+                        break;
+                    case 3:
+                        obj.Display();
+                        break;
+                    case 4:
+                        obj.Count();
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}
